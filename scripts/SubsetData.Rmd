@@ -1,0 +1,185 @@
+---
+title: "Spliting data into smaller gorups"
+output: html_document
+---
+
+
+# Overview
+
+# Packages
+
+```{r}
+library(sf)
+library(tidyverse)
+```
+
+# Data
+
+
+```{r}
+fires = st_read("../data/SiberiaFires2001-2020.shp", "SiberiaFires2001-2020") 
+```
+```{r}
+fires
+```
+
+# 
+var lis2 = ee.List(['EST', 'TCST', 'TBBMT']);
+
+```{r}
+target_eco = c('EST', 'TCST', 'TBBMT')
+```
+
+```{r}
+fires %>%
+  filter(FireYr > 2010) %>%
+  filter(EcoCode %in% target_eco) %>%
+  group_by(FireYr) %>%
+  summarise(count = n())
+```
+
+## For 2011
+```{r}
+fires %>%
+  filter(FireYr == 2011) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+## For 2012
+```{r}
+fires %>%
+  filter(FireYr == 2012) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+
+## For 2013
+```{r}
+fires %>%
+  filter(FireYr == 2013) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+## For 2014
+```{r}
+fires %>%
+  filter(FireYr == 2014) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+## For 2015
+```{r}
+fires %>%
+  filter(FireYr == 2015) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+## For 2016
+```{r}
+fires %>%
+  filter(FireYr == 2016) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+```{r}
+fires %>%
+  filter(FireYr == 2016) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(IDobj = quantile(IDobj, c(0.25, 0.5, 0.75)), q = c(0.25, 0.5, 0.75))
+
+```
+## For 2017
+```{r}
+fires %>%
+  filter(FireYr == 2017) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+```{r}
+fires %>%
+  filter(FireYr == 2017) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(IDobj = quantile(IDobj, c(0.25, 0.5, 0.75)), q = c(0.25, 0.5, 0.75))
+
+```
+## For 2018
+```{r}
+fires %>%
+  filter(FireYr == 2018) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+```{r}
+fires %>%
+  filter(FireYr == 2018) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(IDobj = quantile(IDobj, c(0.25, 0.5, 0.75)), q = c(0.25, 0.5, 0.75))
+
+```
+## For 2019
+```{r}
+fires %>%
+  filter(FireYr == 2019) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+```{r}
+fires %>%
+  filter(FireYr == 2019) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(IDobj = quantile(IDobj, c(0.25, 0.5, 0.75)), q = c(0.25, 0.5, 0.75))
+
+```
+
+
+## For 2020
+```{r}
+fires %>%
+  filter(FireYr == 2020) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(count = n(),
+            minID = min(IDobj),
+            maxID = max(IDobj),
+            mdeianID = median(IDobj))
+```
+
+```{r}
+fires %>%
+  filter(FireYr == 2020) %>%
+  filter(EcoCode %in% target_eco) %>%
+  summarise(IDobj = quantile(IDobj, c(0.25, 0.5, 0.75)), q = c(0.25, 0.5, 0.75))
+
+```
