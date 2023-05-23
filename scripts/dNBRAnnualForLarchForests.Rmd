@@ -6,28 +6,28 @@ output: html_document
 ---
 
 # Overview
-The code in this script can be copied into Earth Engine to produce dNBR images for Larch forest across eastern Siberia
+The code in this script can be copied into Earth Engine to produce dNBR images for the Larch forest across eastern Siberia.
 
-In EE, the data is processed by fire perimeters and year, to remain within the computational limits of EE.
+In EE, the data is processed by fire perimeters and year to remain within the computational limits of EE.
     
-This script is adapted from work mapping fires in eastern Siberia by Talucci et al. 
+This script is adapted from previous scripts used to map fires in eastern Siberia by Talucci et al. (2022).
+
+Below are five chunks of JavaScript code. The code within the chunk can be copied and pasted into the EE code editor. 
+
+For Chunk #1, Please note the fire perimeters are available for download from the [Arctic Data Center](https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2GB1XJ4M)
+
+For Chunk #2, several lines of code are turned off, with only a few turned on to stay within the computational limits. Each variable is either run by itself or in conjunction with one other. This sub-setting was required to remain within the computational limitations of EE. The image processing is run on a single fire season. For 2011-2020, the single fire year is subset further by splinting up the perimeters into smaller groups with the property `IDobj` for the region that contains the Eastern Siberia Taiga (EST), Taimyr-Central Siberian Tundra (TCST), Trans-Baikal Bald Mountain tundra (TBBMT).
 
 
-Below are 4 chunks of JavaScript code that can be copied and pasted into the EE code editor. 
+In Chunk #3, define the `aoi` to match what is run in Chunk #2.
 
-For Chunk #1, Please note the fire perimeters are available for downloaded from the [Arctic Data Center](https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2GB1XJ4M)
+In chunk #4, we process the imagery, where dNBR is calculated from one-year pre-fire and one-year post-fire. Additionally, the imagery is exported in this chunk, and the file's name will need to be changed for each run.
 
-For Chunk #2, several lines of code are turn off with only a few turn on. Each variable is either run by itself or in conjunction with one other. This sub-setting was required to remain within the computational limits of EE. The image processing is run on a single fire season. For 2011-2020, the single fire year is subset further by splinting up the perimeters into smaller groups by 'IDobj' for the region that contains the Eastern Siberian Taiga, 
-Therefore line of need to be turned off and on in the code to stay within the computational limits of EE
-
-In Chunk #3, define the aoi, so it matches what is run in Chunk #2.
-
-In chunk #4, we process the imagery, where dNBR is calculated from one year pre-fire and one year post-fire. Additionally, the imagery is exported in this chunk and the name of the file will need to be change for each run.
-
-Each run produces a single output for a given year and aoi resulting in XX total runs and image outputs that are then mosaic together, see script XX. 
+Each run produces a single output for a given year, and `aoi` results in 55 image outputs. 
 
 # Chunk 1
-This defines the pre-fir year, year of fire, and post-fire year. These years will need to be changed to iterate through 2001-2020 fire years. This chunk also calls in the fire perimeters, which can be download from the Arctic Data Center. Finally, we create two list with the EcoCode Names for the areas relevant for the project. These list are used to subset the data in Chunk 2, which allowed us to remain within EE computational limits.
+This defines the pre-fir year, year of fire, and post-fire year. These years will need to be changed to iterate through the 2001-2020 fire years. This chunk also calls in the fire perimeters, which can be downloaded from the Arctic Data Center. Finally, we create two lists with the EcoCode Names for the areas relevant to the project. These lists are used to subset the data in Chunk 2, which allowed us to remain within EE computational limits.
+
 ```{js}
 // Center Map
 Map.setCenter(160.092, 66.704, 4);
@@ -47,9 +47,10 @@ var lis2 = ee.List(['EST', 'TCST', 'TBBMT']);
 ```
 
 # Chunk 2
-This chunk of code contains many components that are used separately for a given year and location to remain within the computational limits of EE. For all years iterate through variable 'fc_ne'. For variable 'fc_e', run years 2001-2010 on the full 'fc_e' area. For 2011-2020, 'fc_e' needs to be split into smaller groups to stay within the computational limits, which involve running the 'fc_e variable plus either 'fe_e1_YYYY', fc_e2_YYYY', or 'fc_e3_YYYY'.
+This chunk of code contains many components that are used separately for a given year and location to remain within the computational limits of EE. For all years, iterate through variable `fc_ne`. For variable `fc_e`, run years 2001-2010 on the entire `fc_e` area. For 2011-2020, `fc_e` needs to be split into smaller groups to stay within the computational limits, which involve running the `fc_e` variable plus either `fe_e1_YYYY`, `fc_e2_YYYY`, or `fc_e3_YYYY`.
 
-The code is currently set up to run the fire year 2020 for east2, 'fc_e2_2020'.
+The code is currently set up to run the fire year 2020 for east2, `fc_e2_2020`.
+
 
 ```{js}
 // var fc_all = fc.filter("FireYr == 2001");// **change year** 
@@ -97,7 +98,10 @@ var fc_e2_2020 = fc_e.filter(ee.Filter.and(ee.Filter.greaterThan('IDobj', 4713),
 ```
 
 # Chunk 3
-Define the aoi, make sure the aoi is defined as the variable run in Chunk 2.
+Here, we define the `aoi`, and make sure the `aoi` is defined as the variable run in Chunk 2.
+
+
+
 ```{js}
 print(fc_e.size())
 // print(fc_e1_2016.size())
@@ -117,7 +121,9 @@ Map.addLayer(aoi, {}, 'aoi')
 ```
 
 # Chunk 4
-This chunk processes the imagery for the aoi defined above including calculating dNBR and masking out areas that do not have larch. 
+This chunk processes the imagery for the aoi defined above, including calculating dNBR and masking out areas that do not have larch. 
+
+
 ```{js}
 // Function to mask outside polygons
 var maskOutside = function(image, fc) {
@@ -274,7 +280,8 @@ Map.addLayer(dnbr_masked, dnbrViz, 'dnbr_masked')
 ```
 
 # Chunk 5
-This chunk exports the dNBR image to assets. The file name should be change for each iteration, anything associated with the aoi 'fc_ne' is consider to be Northeastern Siberia including ecozones Northeast Siberia Taiga (NST), Cherskii–Kolyma mountain tundra (CKMT), and Bering Tunda (BT). For anything associated with the aoi fc_e this is consider eastern Siberia including ecozones Eastern Siberia Taiga (EST), Taimyr-Central Siberian Tundra (TCST), Trans-Baikal Bald Mountain tundra (TBBMT). For additional subsets ofr fc_e add a 1, 2, or 3 depending on the AOI.
+This chunk exports the dNBR image to assets. The file name should be changed for each iteration. Anything associated with the aoi `fc_ne` is considered to be Northeastern Siberia, including ecozones Northeast Siberia Taiga (NST), Cherskii–Kolyma mountain tundra (CKMT), and Bering Tunda (BT). For anything associated with the aoi `fc_e`, this is considered eastern Siberia, including ecozones Eastern Siberia Taiga (EST), Taimyr-Central Siberian Tundra (TCST), Trans-Baikal Bald Mountain tundra (TBBMT). For additional subsets of `fc_e`, add a 1, 2, or 3, depending on the `aoi`.
+
 ```{js}
 //------------------------- EXPORT TO ASSET --------------------------------------//
 // Export the image to an Earth Engine asset.
@@ -288,3 +295,7 @@ Export.image.toAsset({
   maxPixels: 1e13
 });
 ```
+
+
+# References
+Talucci, A. C., M. M. Loranty, and H. D. Alexander. 2022. Siberian taiga and tundra fire regimes from 2001–2020. Environmental Research Letters 17:025001.
